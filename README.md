@@ -1,4 +1,4 @@
-FIR
+OOXX
 ===
 
 GoBang / Gomoku / Renju / Five in a Row / FIR / 五子棋 Game with Reinforcement Learning 强化学习
