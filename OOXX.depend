@@ -1,0 +1,50 @@
+# depslib dependency file v1.0
+1373877069 source:d:\pancho\dropbox\workspace\ooxx\engine\gobang.cc
+	"GoBang.h"
+
+1373877069 d:\pancho\dropbox\workspace\ooxx\engine\gobang.h
+	"Board.h"
+	<iostream>
+	<vector>
+	<stack>
+	<map>
+	<set>
+	<iomanip>
+
+1373853010 d:\pancho\dropbox\workspace\ooxx\engine\board.h
+	<iostream>
+	<bitset>
+
+1373815774 source:d:\pancho\dropbox\workspace\ooxx\main.cc
+	<iostream>
+	"test\GoBangTester.h"
+	"interface\FiverEngine.h"
+
+1373804297 d:\pancho\dropbox\workspace\ooxx\test\gobangtester.h
+	"..\\engine\GoBang.h"
+
+1373877069 d:\pancho\dropbox\workspace\ooxx\\engine\gobang.h
+	"Board.h"
+	<iostream>
+	<vector>
+	<stack>
+	<map>
+	<set>
+	<iomanip>
+
+1373853010 d:\pancho\dropbox\workspace\ooxx\\engine\board.h
+	<iostream>
+	<bitset>
+
+1373877117 d:\pancho\dropbox\workspace\ooxx\interface\fiverengine.h
+	"..\\engine\GoBang.h"
+	<iostream>
+	<sstream>
+	<curses.h>
+
+1216098806 d:\pancho\dropbox\workspace\ooxx\include\\curses.h
+	<stdarg.h>
+	<stddef.h>
+	<stdio.h>
+	<wchar.h>
+
