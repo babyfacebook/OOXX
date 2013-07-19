@@ -386,6 +386,7 @@ pair< int, vector<Action> > GoBang::scanLine(const int &i, const int &j, const c
 //眠二 有点可成眠三(有点可成活三则为活二) (line_count<=2)
 //活一 有点可成活二 (line_count==1)
 //眠一 有点可成眠二 (line_count==1)
+//未来用空间换时间
 pair< int, vector<Action> > GoBang::checkLineState(const int &i, const int &j, const char &direct, Board goBoard, const bool &forbid_move, int depth) //范围应该限制在i,j左右五格内
 {
     int state=0;

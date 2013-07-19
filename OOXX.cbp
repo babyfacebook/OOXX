@@ -21,18 +21,35 @@
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Compiler>
-					<Add option="-O2" />
+					<Add option="-O3" />
+					<Add directory="include/" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
+					<Add library="lib\panel.a" />
+					<Add library="lib\pdcurses.a" />
 				</Linker>
 			</Target>
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
+			<Add directory="include/" />
 		</Compiler>
-		<Unit filename="main.cpp" />
+		<Linker>
+			<Add library="lib\panel.a" />
+			<Add library="lib\pdcurses.a" />
+		</Linker>
+		<Unit filename="engine/Board.h" />
+		<Unit filename="engine/GoBang.cc" />
+		<Unit filename="engine/GoBang.h" />
+		<Unit filename="interface/FiverEngine.h" />
+		<Unit filename="main.cc" />
+		<Unit filename="test/BoardTester.h" />
+		<Unit filename="test/GoBangTester.h" />
+		<Unit filename="utils/Action.h" />
+		<Unit filename="utils/Manual.h" />
+		<Unit filename="utils/tree/tree.hh" />
 		<Extensions>
 			<code_completion />
 			<envvars />

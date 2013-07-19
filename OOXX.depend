@@ -11,7 +11,7 @@
 	<set>
 	<iomanip>
 
-1373853010 d:\pancho\dropbox\workspace\ooxx\engine\board.h
+1374219862 d:\pancho\dropbox\workspace\ooxx\engine\board.h
 	<iostream>
 	<bitset>
 
@@ -32,11 +32,11 @@
 	<set>
 	<iomanip>
 
-1373853010 d:\pancho\dropbox\workspace\ooxx\\engine\board.h
+1374219862 d:\pancho\dropbox\workspace\ooxx\\engine\board.h
 	<iostream>
 	<bitset>
 
-1373877117 d:\pancho\dropbox\workspace\ooxx\interface\fiverengine.h
+1373943956 d:\pancho\dropbox\workspace\ooxx\interface\fiverengine.h
 	"..\\engine\GoBang.h"
 	<iostream>
 	<sstream>

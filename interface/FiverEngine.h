@@ -35,7 +35,7 @@ public:
         cbreak();	/* Line buffering disabled. pass on everything */
 
         keypad(stdscr, TRUE);
-        mvprintw(0,0, "Fiver beta 0.1");
+        mvprintw(0,0, "OOXX alpha 0.1");
         refresh();
 
 
