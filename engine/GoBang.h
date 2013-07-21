@@ -42,6 +42,14 @@ public:
 
     GoBang(const bool &flag=true):curr_player(BLACK_STONE), winner(EMPTY_POINT), move_count(0), forbid_move(flag){};
 
+    inline int move_debug(const int &piece, const int &i, const int &j)
+    {
+        if (winner!=0||!board.place(piece, i, j)) //落子失败或者有了
+            return ERROR_CODE;
+        return 0; //暂时
+
+    }
+
     int move(const int &i, const int &j);
     int move(const int &piece, const int &i, const int &j, const bool &clear_undoStack=true);
     int undo();
@@ -73,9 +81,9 @@ public:
         return scanLine(i, j, direct, board);
     };
 
-    static int countLine(const int &i, const int &j, const char &direct, const Board &goBoard);
+    static pair<int, pair<int, int> > countLine(const int &i, const int &j, const char &direct, const Board &goBoard);
 
-    static bool isForbidMove(const int &i, const int &j, Board &goBoard);
+    static int isForbidMove(const int &i, const int &j, Board &goBoard);
 
     static pair< int, vector<Action> > checkLineState(const int &i, const int &j, const char &direct, Board goBoard, const bool &forbid_move=true, int depth=-1);
 

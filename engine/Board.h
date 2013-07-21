@@ -8,6 +8,7 @@
 
 using namespace std;
 
+
 const int MAX_BOARD_SIZE=15;
 const int MIN_BOARD_SIZE=5;
 const int BLACK_STONE=1;
@@ -106,7 +107,9 @@ public:
 
     }
 
-    inline void rotate(const int &right_angle_num=1)
+    inline void flip(const char&direction='-'); //也可以用map做
+
+    inline void rotate(const int &right_angle_num=1) //未来可以用map做 map做会有潜在扩展问题么 貌似没有
     {
         int len=size();
         int temp;
@@ -224,8 +227,8 @@ public:
 
 private:
 
-    bitset<256> black_pieces; //256+256位的棋盘 前1位不要 中间15*15表示黑棋 15*15表示白棋 从左到右从上至下索引 black+white各后两位放棋盘边长 最大15位
-    bitset<256> white_pieces; //任意时候 black_pieces&white_pieces==0 位0表示对应的位置没有棋子 1表示有相应棋子
+    bitset<256> black_pieces; //256+256位的棋盘 前1位不要 中间15*15表示黑棋 15*15表示白棋 从左到右从上至下索引 black+white各后两位放棋盘边长 最大15
+    bitset<256> white_pieces; //任意时候 black_pieces&white_pieces==0(不存边长的话) 位0表示对应的位置没有棋子 1表示有相应棋子
 
     inline void setSize(const int &l)
     {
