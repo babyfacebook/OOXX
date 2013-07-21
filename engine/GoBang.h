@@ -30,7 +30,7 @@ using namespace std;
 
 typedef pair<int, int> Action;
 
-
+const vector<Action> ac_vec;
 
 class GoBang{
 public:
@@ -50,10 +50,10 @@ public:
 
     }
 
-    int move(const int &i, const int &j);
-    int move(const int &piece, const int &i, const int &j, const bool &clear_undoStack=true);
-    int undo();
-    int redo();
+    pair< int, vector<Action> > move(const int &i, const int &j);
+    pair< int, vector<Action> > move(const int &piece, const int &i, const int &j, const bool &clear_undoStack=true);
+    pair< int, vector<Action> > undo();
+    pair< int, vector<Action> > redo();
 
     inline Action last_move() const
     {
@@ -85,7 +85,7 @@ public:
 
     static int isForbidMove(const int &i, const int &j, Board &goBoard);
 
-    static pair< int, vector<Action> > checkLineState(const int &i, const int &j, const char &direct, Board goBoard, const bool &forbid_move=true, int depth=-1);
+    static pair< int, vector<Action> > checkLineState(const int &i, const int &j, const char &direct, Board &goBoard, const bool &forbid_move=true, int depth=-1);
 
     //checkLineState 在某方向用scanLine进行状态判断:眠一/活一/眠二/活二/眠三/活三/眠四/活四/五/长连 这个地方的难点在于还要将所有的关键点检测出来
     //长连 黑棋line_count>5
@@ -110,16 +110,16 @@ public:
         return checkState(i, j, board, forbid_move);
     }
 
-    inline int checkState()
+    inline pair< int, vector<Action> > checkState()
     {
         if (move_stack.empty())
-            return 0;
-        int state=0;
-        state=checkState(move_stack.top().second.first, move_stack.top().second.second).first; //暂时隐去
-        if (state==FIVE)
+            return make_pair(0, ac_vec);
+        pair< int, vector<Action> > state;
+        state=checkState(move_stack.top().second.first, move_stack.top().second.second); //暂时隐去
+        if (state.first==FIVE)
             winner=board.at(move_stack.top().second.first, move_stack.top().second.second);
         else
-        if (state<0)
+        if (state.first<0)
         {
             winner=WHITE_STONE;
         }

@@ -7,6 +7,7 @@ class GoBangTester{
 public:
     void test()
     {
+        pair< int, vector<Action> > o;
 //        cout<<endl;
 //        goBang.undo();
 //        cout<<goBang<<endl;
@@ -106,7 +107,7 @@ public:
 //        showLineState(1, 11, '-');
 //        showLineState(1, 7, '-');
 
-        goBang.reset();
+//        goBang.reset();
 //        goBang.move(BLACK_STONE,1,1);
 //        goBang.move(BLACK_STONE,1,4);
 //        goBang.move(BLACK_STONE,1,5);
@@ -157,7 +158,7 @@ public:
 
 //        goBang.move(BLACK_STONE,6,4);
 
-        cout<<goBang<<endl;
+//        cout<<goBang<<endl;
 //        showLineState(1, 1, '-');
 //        showLineState(1, 4, '-');
 //        showLineState(2, 6, '-');
@@ -178,12 +179,28 @@ public:
 //        cout<<"| line-count: "<<o.first<<endl;
 //        showActionSet(o.second);
 
-         goBang.move(BLACK_STONE,8,8);
-         goBang.move(BLACK_STONE,8,9);
-         goBang.move(BLACK_STONE,8,10);
-         goBang.move(BLACK_STONE,8,11);
+//         goBang.move(BLACK_STONE,8,8);
+//         goBang.move(BLACK_STONE,8,9);
+//         goBang.move(BLACK_STONE,8,10);
+//         goBang.move(BLACK_STONE,8,11);
+//         cout<<goBang<<endl;
+//         showState(8, 11);
+
+         goBang.reset();
+         goBang.move_debug(BLACK_STONE,8,7);
+         goBang.move_debug(WHITE_STONE,8,8);
+         goBang.move_debug(BLACK_STONE,8,9);
+//        goBang.move_debug(WHITE_STONE,7,9);
+         goBang.move_debug(WHITE_STONE,6,9);
+         goBang.move_debug(WHITE_STONE,5,9);
+         goBang.move_debug(WHITE_STONE,4,9);
+         goBang.move_debug(WHITE_STONE,2,9);
          cout<<goBang<<endl;
-         showState(8, 11);
+//         showLineState(6, 9, '|');
+        o=goBang.scanLine(6, 9, '|');
+        cout<<"| 6:9 line-count: "<<o.first<<endl;
+        showActionSet(o.second);
+         cout<<goBang<<endl;
 
     };
 

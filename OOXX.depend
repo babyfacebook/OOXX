@@ -1,8 +1,8 @@
 # depslib dependency file v1.0
-1374417152 source:d:\pancho\dropbox\workspace\ooxx\engine\gobang.cc
+1374425288 source:d:\pancho\dropbox\workspace\ooxx\engine\gobang.cc
 	"GoBang.h"
 
-1374417122 d:\pancho\dropbox\workspace\ooxx\engine\gobang.h
+1374422323 d:\pancho\dropbox\workspace\ooxx\engine\gobang.h
 	"Board.h"
 	<iostream>
 	<vector>
@@ -11,19 +11,19 @@
 	<set>
 	<iomanip>
 
-1374387947 d:\pancho\dropbox\workspace\ooxx\engine\board.h
+1374419215 d:\pancho\dropbox\workspace\ooxx\engine\board.h
 	<iostream>
 	<bitset>
 
-1374416281 source:d:\pancho\dropbox\workspace\ooxx\main.cc
+1374425300 source:d:\pancho\dropbox\workspace\ooxx\main.cc
 	<iostream>
 	"test\GoBangTester.h"
 	"interface\FiverEngine.h"
 
-1374416281 d:\pancho\dropbox\workspace\ooxx\test\gobangtester.h
+1374424768 d:\pancho\dropbox\workspace\ooxx\test\gobangtester.h
 	"..\\engine\GoBang.h"
 
-1374417122 d:\pancho\dropbox\workspace\ooxx\\engine\gobang.h
+1374425617 d:\pancho\dropbox\workspace\ooxx\\engine\gobang.h
 	"Board.h"
 	<iostream>
 	<vector>
@@ -32,17 +32,17 @@
 	<set>
 	<iomanip>
 
-1374387947 d:\pancho\dropbox\workspace\ooxx\\engine\board.h
+1374419215 d:\pancho\dropbox\workspace\ooxx\\engine\board.h
 	<iostream>
 	<bitset>
 
-1374416281 d:\pancho\dropbox\workspace\ooxx\interface\fiverengine.h
+1374422771 d:\pancho\dropbox\workspace\ooxx\interface\fiverengine.h
 	"..\\engine\GoBang.h"
 	<iostream>
 	<sstream>
 	<curses.h>
 
-1374416281 d:\pancho\dropbox\workspace\ooxx\include\\curses.h
+1374419215 d:\pancho\dropbox\workspace\ooxx\include\\curses.h
 	<stdarg.h>
 	<stddef.h>
 	<stdio.h>

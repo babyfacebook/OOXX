@@ -2,15 +2,15 @@
 
 char direct_arr[4]={'-', '|', '/', '\\'};
 
-int GoBang::move(const int &i, const int &j)
+pair< int, vector<Action> > GoBang::move(const int &i, const int &j)
 {
     return move(curr_player, i, j);
 }
 
-int GoBang::move(const int &piece, const int &i, const int &j, const bool &clear_undoStack)
+pair< int, vector<Action> > GoBang::move(const int &piece, const int &i, const int &j, const bool &clear_undoStack)
 {
     if (winner!=0||!board.place(piece, i, j)) //落子失败或者有了
-        return ERROR_CODE;
+        return make_pair(ERROR_CODE, ac_vec);
     //落子成功
     move_count++;
     move_stack.push(make_pair(piece, make_pair(i, j)));
@@ -18,22 +18,23 @@ int GoBang::move(const int &piece, const int &i, const int &j, const bool &clear
         while(!undo_stack.empty())
             undo_stack.pop();
 
-    int state=checkState();
+//    int state=checkState();
     changePlayer();
 
 //    if (!clear_undoStack)
 //        undo_stack.pop();
 //    return checkState();
-    return state; //暂时
+//    return state; //暂时
+    return checkState();
 
 }
 
 
 
-int GoBang::undo()
+pair< int, vector<Action> > GoBang::undo()
 {
     if (move_stack.empty())
-        return 0;
+        return make_pair(ERROR_CODE, ac_vec);
     else
     {
         int i=move_stack.top().second.first;
@@ -49,10 +50,10 @@ int GoBang::undo()
         return checkState();
     }
 }
-int GoBang::redo()
+pair< int, vector<Action> > GoBang::redo()
 {
     if (undo_stack.empty())
-        return ERROR_CODE;
+        return make_pair(ERROR_CODE, ac_vec);
 
     int i=undo_stack.top().second.first;
     int j=undo_stack.top().second.second;
@@ -218,6 +219,8 @@ pair< int, vector<Action> > GoBang::scanLine(const int &i, const int &j, const c
                 {
                     for (int n=1; n<=5-connect_count; ++n)
                     {
+                        if (n>=block_end)
+                            break;
                         emptyPointSet.push_back(make_pair(i+n*offset_i, j+n*offset_j));
                     }
                 }
@@ -225,6 +228,8 @@ pair< int, vector<Action> > GoBang::scanLine(const int &i, const int &j, const c
                 {
                     for (int n=1; n<=5-connect_count; ++n)
                     {
+                        if (-n<=block_begin)
+                            break;
                         emptyPointSet.push_back(make_pair(i-n*offset_i, j-n*offset_j));
                     }
                 }
@@ -277,9 +282,10 @@ pair< int, vector<Action> > GoBang::scanLine(const int &i, const int &j, const c
                         if (connect_count==1)
                             for(int n=1;n!=4;++n)
                             {
-                                if (goBoard.isEmpty(i+(begin_index-n)*offset_i, j+(begin_index-n)*offset_j))
+//                                cout<<".."<<endl;
+                                if (begin_index-n>block_begin&&goBoard.isEmpty(i+(begin_index-n)*offset_i, j+(begin_index-n)*offset_j))
                                     emptyPointSet.push_back(make_pair(i+(begin_index-n)*offset_i, j+(begin_index-n)*offset_j));
-                                if (goBoard.isEmpty(i+(end_index+n)*offset_i, j+(end_index+n)*offset_j))
+                                if (end_index+n<block_end&&goBoard.isEmpty(i+(end_index+n)*offset_i, j+(end_index+n)*offset_j))
                                     emptyPointSet.push_back(make_pair(i+(end_index+n)*offset_i, j+(end_index+n)*offset_j));
                             }
                         else if (connect_count>1&&connect_count<4)
@@ -328,7 +334,7 @@ pair< int, vector<Action> > GoBang::scanLine(const int &i, const int &j, const c
 //活一 有点可成活二 (connect_count==1)
 //眠一 有点可成眠二 (connect_count==1)
 //未来用空间换时间
-pair< int, vector<Action> > GoBang::checkLineState(const int &i, const int &j, const char &direct, Board goBoard, const bool &forbid_move, int depth) //范围应该限制在i,j左右五格内
+pair< int, vector<Action> > GoBang::checkLineState(const int &i, const int &j, const char &direct, Board &goBoard, const bool &forbid_move, int depth) //范围应该限制在i,j左右五格内
 {
     int state=0;
     vector<Action> keyPointSet;
@@ -344,6 +350,9 @@ pair< int, vector<Action> > GoBang::checkLineState(const int &i, const int &j, c
     int connect_count=data.first;
     vector<Action> emptyPointSet(data.second);
 //    int state=0;
+
+
+
     int try_state=0;
     int try_BestState=0;
     int try_i=0;
@@ -383,9 +392,16 @@ pair< int, vector<Action> > GoBang::checkLineState(const int &i, const int &j, c
         {
             try_i=iter->first;
             try_j=iter->second;
+//
+//            if (try_i==8&&try_j==9)
+//            {
+//                cout<<goBoard<<endl;//debug
+//                cout<<i<<':'<<j<<endl;
+//                cin>>ch;
+//            }
 
             //假落子推算
-            goBoard.place(goBoard.at(i, j), try_i, try_j); //暂时不修改引用 看会发生什么
+            goBoard.place(goBoard.at(i, j), try_i, try_j); //这个地方曾经出现过严重问题 导致需要多个Board 需要验证一下place是否成功 隐含错误
 
 //            cout<<"check1"<<endl;//debug
 
@@ -408,6 +424,7 @@ pair< int, vector<Action> > GoBang::checkLineState(const int &i, const int &j, c
                 {
 //                    cout<<"try: "<<try_i<<try_j<<endl;
 //                    cout<<goBoard<<endl; //debug
+
                     goBoard.remove(try_i, try_j);
 
 
@@ -493,7 +510,7 @@ pair<int, pair<int, int> > GoBang::countLine(const int &i, const int &j, const c
 {
     vector<Action> emptyPointSet;
     if (!goBoard.isPiece(i, j)) //如果不是棋子
-        return make_pair(0, make_pair(0,0));
+        return make_pair(0, make_pair(0, 0));
 
     int connect_count=1;
     int oppo_connect_count=1;
@@ -724,6 +741,7 @@ pair< int, vector<Action> > GoBang::checkState(const int &i, const int &j, Board
         if (direct_state.first>state)
         {
             state=direct_state.first;
+            keyPointSet=direct_state.second;
         }
         directStateSet.insert(direct_state);
     }
@@ -732,6 +750,7 @@ pair< int, vector<Action> > GoBang::checkState(const int &i, const int &j, Board
     {
         //长连
         state=OVERLINE;
+        keyPointSet.clear();
     }
     else
     if(directStateSet.count(FIVE))
@@ -744,7 +763,11 @@ pair< int, vector<Action> > GoBang::checkState(const int &i, const int &j, Board
     {
         //四四 这里对白棋四四和黑棋四四作出区别
         if (forbid_move&&goBoard.isBlack(i, j))
+        {
             state=F_DOUBLE_FOUR;
+            keyPointSet.clear();
+        }
+
         else
             state=DOUBLE_FOUR;
     }
@@ -758,7 +781,10 @@ pair< int, vector<Action> > GoBang::checkState(const int &i, const int &j, Board
     if (directStateSet.count(OPEN_THREE)>1)
     {   //三三
         if (forbid_move&&goBoard.isBlack(i, j))
+        {
             state=F_DOUBLE_THREE;
+            keyPointSet.clear();
+        }
         else
         if (directStateSet.count(OPEN_FOUR)+directStateSet.count(SLEEP_FOUR)==1) //四三三 有禁手时为三三禁手 无禁手时为四三
         {

@@ -40,7 +40,7 @@ public:
 
 
 
-        int state=0;
+        pair< int, vector<Action> > state;
         Action best_a;
 //        goBang.move(8, 8);
         while(1)
@@ -188,13 +188,13 @@ public:
                 case 'R':
                     {
                         goBang.reset();
-                        state=0;
+                        state=make_pair(0, ac_vec);
                     }
                     break;
                 case 'r':
                     {
                         goBang.reset();
-                        state=0;
+                        state=make_pair(0, ac_vec);
                     }
                     break;
                 case 'A':goBang.board.rotate();
@@ -363,8 +363,9 @@ public:
         refresh();
     }
 
-    void drawState(int &code)
+    void drawState(pair< int, vector<Action> > &s)
     {
+        int code=s.first;
         int piece=goBang.last_piece();
 
         string player_name;
