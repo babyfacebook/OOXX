@@ -40,6 +40,7 @@
 			<Add library="lib\panel.a" />
 			<Add library="lib\pdcurses.a" />
 		</Linker>
+		<Unit filename="ai/ann/NeuralNet.h" />
 		<Unit filename="engine/Board.h" />
 		<Unit filename="engine/GoBang.cc" />
 		<Unit filename="engine/GoBang.h" />
@@ -47,8 +48,10 @@
 		<Unit filename="main.cc" />
 		<Unit filename="test/BoardTester.h" />
 		<Unit filename="test/GoBangTester.h" />
+		<Unit filename="test/NeuralNetTester.h" />
 		<Unit filename="utils/Action.h" />
 		<Unit filename="utils/Manual.h" />
+		<Unit filename="utils/timer.h" />
 		<Unit filename="utils/tree/tree.hh" />
 		<Extensions>
 			<code_completion />

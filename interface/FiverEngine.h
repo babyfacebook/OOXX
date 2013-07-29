@@ -40,7 +40,8 @@ public:
 
 
 
-        pair< int, vector<Action> > state;
+//        pair< int, vector<Action> > state;
+        int winner=0;
         Action best_a;
 //        goBang.move(8, 8);
         while(1)
@@ -65,29 +66,29 @@ public:
                         --cursor_j;
                     break;
                 case 'x':
-                    state=goBang.move(BLACK_STONE, cursor_i, cursor_j, true);
+                    winner=goBang.move(BLACK_STONE, cursor_i, cursor_j, true);
 //                        goBang.move(BLACK_STONE, cursor_i, cursor_j, true);
                     break;
                 case 'X':
-                    state=goBang.move(BLACK_STONE, cursor_i, cursor_j, true);
+                    winner=goBang.move(BLACK_STONE, cursor_i, cursor_j, true);
 //                        goBang.move(BLACK_STONE, cursor_i, cursor_j, true);
                     break;
                 case 'o':
-                    state=goBang.move(WHITE_STONE, cursor_i, cursor_j, true);
+                    winner=goBang.move(WHITE_STONE, cursor_i, cursor_j, true);
 //                        goBang.move(WHITE_STONE, cursor_i, cursor_j, true);
                     break;
                 case 'O':
-                    state=goBang.move(WHITE_STONE, cursor_i, cursor_j, true);
+                    winner=goBang.move(WHITE_STONE, cursor_i, cursor_j, true);
 //                        goBang.move(WHITE_STONE, cursor_i, cursor_j, true);
 
                     break;
                 case 10:
-                    state=goBang.move(cursor_i, cursor_j);
+                    winner=goBang.move(cursor_i, cursor_j);
 //                        goBang.move(cursor_i, cursor_j);
                     break;
                 case 8:
                     {
-                        state=goBang.undo();
+                        winner=goBang.undo();
 //                        goBang.undo();
                         if (goBang.last_move().first!=0)
                         {
@@ -105,7 +106,7 @@ public:
                     break;
                 case ',':
                     {
-                        state=goBang.undo();
+                        winner=goBang.undo();
 //                        goBang.undo();
                         if (goBang.last_move().first!=0)
                         {
@@ -123,7 +124,7 @@ public:
                     break;
                 case '<':
                     {
-                        state=goBang.undo();
+                        winner=goBang.undo();
 //                        goBang.undo();
                         if (goBang.last_move().first!=0)
                         {
@@ -141,7 +142,7 @@ public:
                     break;
                 case '.':
                     {
-                        state=goBang.redo();
+                        winner=goBang.redo();
 //                        goBang.redo();
                         if (goBang.last_move().first!=0)
                         {
@@ -158,8 +159,8 @@ public:
                     break;
                 case '>':
                     {
-                        state=goBang.redo();
-//                        cout<<state<<endl;
+                        winner=goBang.redo();
+//                        cout<<winner<<endl;
 //                        goBang.redo();
                         if (goBang.last_move().first!=0)
                         {
@@ -176,7 +177,7 @@ public:
                     break;
                 case ' ':
                     {
-                        state=goBang.move(cursor_i, cursor_j);
+                        winner=goBang.move(cursor_i, cursor_j);
 //                          goBang.move(cursor_i, cursor_j);
 
 //                        mvprintw(24, 6, "Size:%d", goBang.getMovePointSet().size());
@@ -188,13 +189,13 @@ public:
                 case 'R':
                     {
                         goBang.reset();
-                        state=make_pair(0, ac_vec);
+                        winner=0;
                     }
                     break;
                 case 'r':
                     {
                         goBang.reset();
-                        state=make_pair(0, ac_vec);
+                        winner=0;
                     }
                     break;
                 case 'A':goBang.board.rotate();
@@ -207,10 +208,10 @@ public:
                     break;
             }
 
-            drawState(state);
+//            drawState(state);
             drawCount(goBang.move_count);
 
-            int winner=goBang.winner;
+//            int winner=goBang.winner;
             switch(winner)
             {
                 case EMPTY_POINT: mvprintw(1, 32, "           ");
@@ -219,9 +220,9 @@ public:
                 break;
                 case BLACK_STONE: mvprintw(1, 32, "Black Wins!");
                 break;
-                case ERROR_CODE: mvprintw(1, 32, "Ties.      ");
+                case TIE: mvprintw(1, 32, "Ties.      ");
                 break;
-                default:mvprintw(1, 32, "ERROR      ");
+                default:mvprintw(1, 32, "           ");
                 break;
             }
 

@@ -20,6 +20,7 @@ const char WHITE_MARK='O';
 const char EMPTY_MARK='.';
 const char INVALID_MARK='$';
 const char STAR_MARK='+';
+const int TIE=2;
 
 class Board{
 
@@ -209,6 +210,26 @@ public:
         bool flag=black_pieces.none()&&white_pieces.none();
         setSize(l);
         return flag;
+    }
+
+    inline bool isFull()
+    {
+        int len=size();
+        for(int m=0;m<len/2;++m)
+        {
+            for(int j=1;j<len-2*m;++j)
+            {
+                if(at(len-m, m+j)==0)
+                    return false;
+                if(at(len-m-j+1, len-m)==0)
+                    return false;
+                if(at(m+1, len-m-j+1)==0)
+                    return false;
+                if(at(m+j, m+1)==0)
+                    return false;
+            }
+        }
+        return true;
     }
 
     inline char mark(const int &i, const int &j) const
