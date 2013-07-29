@@ -25,11 +25,31 @@ public:
 
     void init()
     {
+
+        vector<int> empty_int_vec;
+        vector<double> empty_double_vec;
         srand((unsigned)time(NULL));
         vector<int> layer;
+
+        //占0位
+        out_buffer.push_back(0.);
+        err_buffer.push_back(0.);
+        FO.push_back(empty_int_vec);
+        FI.push_back(empty_int_vec);
+        delta_w_old.push_back(empty_double_vec);
+        delta_w.push_back(empty_double_vec);
+        w.push_back(empty_double_vec);
+
         for(int n=1; n<=input_num; ++n)
         {
             layer.push_back(n);
+            out_buffer.push_back(0.);
+            err_buffer.push_back(0.);
+            FO.push_back(empty_int_vec);
+            FI.push_back(empty_int_vec);
+            delta_w_old.push_back(empty_double_vec);
+            delta_w.push_back(empty_double_vec);
+            w.push_back(empty_double_vec);
         }
         structure.push_back(layer);
         int begin_index=input_num+1;
@@ -41,22 +61,61 @@ public:
             {
                 //bias
                 layer.push_back(n);
-                connect(0, n);
+                out_buffer.push_back(0.);
+                err_buffer.push_back(0.);
+                FO.push_back(empty_int_vec);
+                FI.push_back(empty_int_vec);
+
+                delta_w_old.push_back(empty_double_vec);
+
+                delta_w.push_back(empty_double_vec);
+                w.push_back(empty_double_vec);
+
+
+
             }
             if (layer.size())
                 structure.push_back(layer);
             begin_index=begin_index+hidden_num[m];
         }
 
+
         layer.clear();
         for(int n=begin_index; n!=begin_index+output_num; ++n)
         {
             layer.push_back(n);
-            connect(0, n);
+            out_buffer.push_back(0.);
+            err_buffer.push_back(0.);
+            FO.push_back(empty_int_vec);
+            FI.push_back(empty_int_vec);
+            delta_w_old.push_back(empty_double_vec);
+            delta_w.push_back(empty_double_vec);
+            w.push_back(empty_double_vec);
         }
         structure.push_back(layer);
         //bias为1
+
+//        cout<<FI.size();
         out_buffer[0]=1.; //debug
+        //这样就会留空了.. 寻求解决方案
+
+        for(vector< vector<double> >::iterator iter=delta_w_old.begin(); iter!=delta_w_old.end(); ++iter)
+        {
+            for(int n=0;n!=delta_w_old.size();++n)
+                (*iter).push_back(0.);
+        }
+
+        for(vector< vector<double> >::iterator iter=delta_w.begin(); iter!=delta_w.end(); ++iter)
+        {
+            for(int n=0;n!=delta_w.size();++n)
+                (*iter).push_back(0.);
+        }
+
+        for(vector< vector<double> >::iterator iter=w.begin(); iter!=w.end(); ++iter)
+        {
+            for(int n=0;n!=w.size();++n)
+                (*iter).push_back(0.);
+        }
 
     }
 
@@ -75,6 +134,14 @@ public:
                     connect(*h_iter, *l_iter);
                 }
         }
+        for(vector< vector<int> >::iterator iter=structure.begin()+1; iter!=structure.end(); ++iter)
+        {
+            high_layer=*iter;
+            for(vector<int>::iterator h_iter=high_layer.begin(); h_iter!=high_layer.end(); ++h_iter)
+                connect(0, *h_iter);
+        }
+
+
 
     }
 
@@ -84,13 +151,16 @@ public:
             w[i][j]=rand()/(double)(RAND_MAX)-0.5;
         else
             w[i][j]=weight;
-        delta_w_old[i][j]=0;
+
+        delta_w_old[i][j]=0.;
+        delta_w[i][j]=0.;
     }
 
     inline void connect(const int &i, const int &j, const double &weight=0)
     {
-        FO[i].insert(j);
-        FI[j].insert(i);
+        //这回要检测重复了
+        FO[i].push_back(j);
+        FI[j].push_back(i);
         set_weight(i,j, weight);
 
     }
@@ -111,7 +181,7 @@ public:
 
         vector<int> layer=structure.back();
         int i,j;
-        set<int> out_set;
+        vector<int> out_set;
         int n=0;
         double error=0.;
         double residual;
@@ -133,8 +203,8 @@ public:
             {
                 i=*iter;
                 out_set=FO[i];
-                err_buffer[i]=0;
-                for(set<int>::iterator s_iter=out_set.begin(); s_iter!=out_set.end(); ++s_iter)
+                err_buffer[i]=0.;
+                for(vector<int>::iterator s_iter=out_set.begin(); s_iter!=out_set.end(); ++s_iter)
                 {
                     j=*s_iter;
 
@@ -189,7 +259,7 @@ public:
         }
 
         int i,j;
-        set<int> in_set;
+        vector<int> in_set;
         for(vector< vector<int> >::iterator iter=structure.begin()+1; iter!=structure.end(); ++iter)
         {
             layer=*iter;
@@ -198,7 +268,7 @@ public:
                 j=*l_iter;
                 in_set=FI[j];
                 out_buffer[j]=0;
-                for(set<int>::iterator s_iter=in_set.begin(); s_iter!=in_set.end(); ++s_iter)
+                for(vector<int>::iterator s_iter=in_set.begin(); s_iter!=in_set.end(); ++s_iter)
                 {
                     i=*s_iter;
                     out_buffer[j]=out_buffer[j]+out_buffer[i]*w[i][j];
@@ -226,14 +296,15 @@ private:
     double eta;
     double momentum;
 
-    map< int, map<int, double> > w;
-    map< int, map<int, double> > delta_w;
-    map< int, map<int, double> > delta_w_old;
-    map< int, set<int> > FO;
-    map< int, set<int> > FI;
+    vector< vector<double> > w;
+    vector< vector<double> > delta_w;
+    vector< vector<double> > delta_w_old;
 
-    map<int, double> out_buffer;
-    map<int, double> err_buffer;
+    vector< vector<int> > FO;
+    vector< vector<int> > FI;
+
+    vector<double> out_buffer;
+    vector<double> err_buffer;
 
     inline double active_func(double y)
     {

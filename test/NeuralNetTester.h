@@ -31,15 +31,15 @@ public:
 //        net.connect(1,4);
 //        net.connect(2,4);
 
-//        net.w[0][3]=-0.5;  //17125  trick的话
-//        net.w[0][4]=0.05;  //21638
-//        net.w[0][5]=-0.3;
-//        net.w[1][3]=0.3;
-//        net.w[1][4]=0.1;
-//        net.w[2][3]=0.2;
-//        net.w[2][4]=0.15;
-//        net.w[3][5]=0.4;
-//        net.w[4][5]=0.35;
+        net.w[0][3]=-0.5;  //17125
+        net.w[0][4]=0.05;  //21638
+        net.w[0][5]=-0.3;
+        net.w[1][3]=0.3;
+        net.w[1][4]=0.1;
+        net.w[2][3]=0.2;
+        net.w[2][4]=0.15;
+        net.w[3][5]=0.4;
+        net.w[4][5]=0.35;
 
         //0.3不行
 //        net.w[0][3]=0.0786309;
@@ -166,33 +166,43 @@ private:
 //    NeuralNet net;
     void showWeight(const NeuralNet &net)
     {
-        map< int, map<int, double> > w=net.w;
-        map<int, double> v;
-        for(map< int, map<int, double> >::iterator iter=w.begin(); iter!=w.end(); ++iter)
+        vector< vector<double> > w=net.w;
+        vector<double> v;
+        int i=0;
+        int j;
+        for(vector< vector<double> >::iterator iter=w.begin(); iter!=w.end(); ++iter)
         {
-            v=iter->second;
-            for(map<int, double>::iterator l_iter=v.begin(); l_iter!=v.end(); ++l_iter)
+            v=*iter;
+            j=0;
+            for(vector<double>::iterator l_iter=v.begin(); l_iter!=v.end(); ++l_iter)
             {
-                cout<<iter->first<<'-'<<l_iter->first<<':'<<l_iter->second<<endl;
+                if (fabs(*l_iter-0.)>1e-6)
+                    cout<<i<<'-'<<j<<':'<<*l_iter<<endl;
+                ++j;
             }
+            ++i;
         }
     }
 
     void showOutBuffer(const NeuralNet &net)
     {
-        map<int, double> out_buffer=net.out_buffer;
-        for(map<int, double>::iterator iter=out_buffer.begin(); iter!=out_buffer.end(); ++iter)
+        vector<double> out_buffer=net.out_buffer;
+        int n=0;
+        for(vector<double>::iterator iter=out_buffer.begin(); iter!=out_buffer.end(); ++iter)
         {
-            cout<<"Out "<<iter->first<<':'<<iter->second<<endl;
+            cout<<"Out "<<n<<':'<<*iter<<endl;
+            ++n;
         }
     }
 
     void showErrBuffer(const NeuralNet &net)
     {
-        map<int, double> err_buffer=net.err_buffer;
-        for(map<int, double>::iterator iter=err_buffer.begin(); iter!=err_buffer.end(); ++iter)
+        vector<double> err_buffer=net.err_buffer;
+        int n=0;
+        for(vector<double>::iterator iter=err_buffer.begin(); iter!=err_buffer.end(); ++iter)
         {
-            cout<<"Delta "<<iter->first<<':'<<iter->second<<endl;
+            cout<<"Delta "<<n<<':'<<*iter<<endl;
+            ++n;
         }
     }
 };

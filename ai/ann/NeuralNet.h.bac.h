@@ -5,6 +5,7 @@
 #include <math.h>
 #include <time.h>
 
+
 #define LINEAR 0
 #define LOGISTIC 1
 #define TANH 2
@@ -40,9 +41,7 @@ public:
             {
                 //bias
                 layer.push_back(n);
-                FO[0].insert(n);
-                FI[n].insert(0);
-                w[0][n]=rand()/(double)(RAND_MAX)-0.5;
+                connect(0, n);
             }
             if (layer.size())
                 structure.push_back(layer);
@@ -53,9 +52,7 @@ public:
         for(int n=begin_index; n!=begin_index+output_num; ++n)
         {
             layer.push_back(n);
-            FO[0].insert(n);
-            FI[n].insert(0);
-            w[0][n]=rand()/(double)(RAND_MAX)-0.5;
+            connect(0, n);
         }
         structure.push_back(layer);
         //bias为1
@@ -81,17 +78,20 @@ public:
 
     }
 
-    inline void connect(const int &i, const int &j, double weight=0)
+    inline void set_weight(const int &i, const int &j, const double &weight=0)
     {
-        if (weight==0)
-            weight=rand()/(double)(RAND_MAX)-0.5;
-
-        w[i][j]=weight;
-
+        if (fabs(weight-0.)<1e-6)
+            w[i][j]=rand()/(double)(RAND_MAX)-0.5;
+        else
+            w[i][j]=weight;
         delta_w_old[i][j]=0;
+    }
 
+    inline void connect(const int &i, const int &j, const double &weight=0)
+    {
         FO[i].insert(j);
         FI[j].insert(i);
+        set_weight(i,j, weight);
 
     }
 
@@ -138,15 +138,12 @@ public:
                 {
                     j=*s_iter;
 
-                    err_buffer[i]+=err_buffer[j]*w[i][j];
+//                    err_buffer[i]+=err_buffer[j]*w[i][j];
                     delta_w[i][j]=eta*err_buffer[j]*out_buffer[i]+momentum*delta_w_old[i][j];
 
                     w[i][j]+=delta_w[i][j];
 
-//                    err_buffer[i]+=err_buffer[j]*w[i][j];  //这个位置反而加速收敛
-
-//                    delta_w[0][j]=eta*err_buffer[j]*out_buffer[0]+momentum*delta_w_old[0][j];
-//                    w[0][j]+=delta_w[0][j];
+                    err_buffer[i]+=err_buffer[j]*w[i][j];  //这个位置反而加速收敛
 
 
                 }
@@ -158,6 +155,7 @@ public:
         }
 
         delta_w_old=delta_w;
+
         return 0.5*error;
 
     }
