@@ -54,11 +54,11 @@
 	<stdio.h>
 	<wchar.h>
 
-1375102018 d:\pancho\dropbox\workspace\ooxx\test\neuralnettester.h
+1375119069 d:\pancho\dropbox\workspace\ooxx\test\neuralnettester.h
 	"..\\ai\ANN\NeuralNet.h"
 	"..\\utils\timer.h"
 
-1375101515 d:\pancho\dropbox\workspace\ooxx\\ai\ann\neuralnet.h
+1375118805 d:\pancho\dropbox\workspace\ooxx\\ai\ann\neuralnet.h
 	<cstdlib>
 	<math.h>
 	<time.h>

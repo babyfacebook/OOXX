@@ -41,7 +41,7 @@ public:
         net.w[3][5]=0.4;
         net.w[4][5]=0.35;
 
-        //0.3²»ĞĞ
+        //0.3Â²Â»ÃÃ
 //        net.w[0][3]=0.0786309;
 //        net.w[0][4]=0.434233;
 //        net.w[0][5]=0.480468;
@@ -166,22 +166,22 @@ private:
 //    NeuralNet net;
     void showWeight(const NeuralNet &net)
     {
-        vector< vector<double> > w=net.w;
-        vector<double> v;
-        int i=0;
-        int j;
-        for(vector< vector<double> >::iterator iter=w.begin(); iter!=w.end(); ++iter)
-        {
-            v=*iter;
-            j=0;
-            for(vector<double>::iterator l_iter=v.begin(); l_iter!=v.end(); ++l_iter)
-            {
-                if (fabs(*l_iter-0.)>1e-6)
-                    cout<<i<<'-'<<j<<':'<<*l_iter<<endl;
-                ++j;
-            }
-            ++i;
-        }
+//        vector< vector<double> > w=net.w;
+//        vector<double> v;
+//        int i=0;
+//        int j;
+//        for(vector< vector<double> >::iterator iter=w.begin(); iter!=w.end(); ++iter)
+//        {
+//            v=*iter;
+//            j=0;
+//            for(vector<double>::iterator l_iter=v.begin(); l_iter!=v.end(); ++l_iter)
+//            {
+//                if (fabs(*l_iter-0.)>1e-6)
+//                    cout<<i<<'-'<<j<<':'<<*l_iter<<endl;
+//                ++j;
+//            }
+//            ++i;
+//        }
     }
 
     void showOutBuffer(const NeuralNet &net)

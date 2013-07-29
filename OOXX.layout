@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_layout_file>
 	<ActiveTarget name="Release" />
-	<File name="utils\Action.h" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="engine\Board.h" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="178" topLine="0" />
+			<Cursor1 position="753" topLine="135" />
+		</Cursor>
+	</File>
+	<File name="interface\FiverEngine.h" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="2981" topLine="88" />
 		</Cursor>
 	</File>
 	<File name="utils\tree\tree.hh" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -11,34 +16,14 @@
 			<Cursor1 position="949" topLine="15" />
 		</Cursor>
 	</File>
-	<File name="ai\ann\NeuralNet.h" open="1" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="8766" topLine="288" />
-		</Cursor>
-	</File>
-	<File name="engine\GoBang.h" open="1" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="6327" topLine="9" />
-		</Cursor>
-	</File>
-	<File name="utils\timer.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="84" topLine="0" />
-		</Cursor>
-	</File>
 	<File name="engine\GoBang.cc" open="1" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="8592" topLine="237" />
 		</Cursor>
 	</File>
-	<File name="test\NeuralNetTester.h" open="1" top="1" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="test\NeuralNetTester.h" open="1" top="1" tabpos="2" split="0" active="1" splitpos="0" zoom_1="1" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="873" topLine="135" />
-		</Cursor>
-	</File>
-	<File name="interface\FiverEngine.h" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="7348" topLine="88" />
+			<Cursor1 position="2594" topLine="102" />
 		</Cursor>
 	</File>
 	<File name="utils\Manual.h" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -46,19 +31,34 @@
 			<Cursor1 position="160" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="engine\Board.h" open="1" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="engine\GoBang.h" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="753" topLine="135" />
+			<Cursor1 position="401" topLine="312" />
 		</Cursor>
 	</File>
-	<File name="main.cc" open="1" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="utils\Action.h" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="226" topLine="0" />
+			<Cursor1 position="178" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="main.cc" open="0" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="516" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="ai\ann\NeuralNet.h" open="1" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="7086" topLine="243" />
+		</Cursor>
+	</File>
+	<File name="utils\timer.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="497" topLine="1" />
 		</Cursor>
 	</File>
 	<File name="test\GoBangTester.h" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="23733" topLine="589" />
+			<Cursor1 position="18916" topLine="216" />
 		</Cursor>
 	</File>
 </CodeBlocks_layout_file>
