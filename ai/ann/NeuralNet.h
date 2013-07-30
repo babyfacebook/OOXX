@@ -52,6 +52,16 @@ public:
 
         delete deltaw;
         deltaw=NULL;
+
+        //记得销毁structure 从0开始
+        for(int n=1;n<=layer_num;++n)
+        {
+            delete structure[n];
+            structure[n]=NULL;
+        }
+        delete structure;
+        structure=NULL;
+
     }
 
     void init()
@@ -59,117 +69,131 @@ public:
 
 
         srand((unsigned)time(NULL));
-        vector<int> layer;
+        layer_num=2+hidden_num.size();
+        structure=new int*[layer_num+1];
+        structure[0]=NULL;
 
+        layer_unit_num.push_back(0);
         //占0位
-        addElement();
-
+//        addElement();
+        int layer_index=1;
+        layer_unit_num.push_back(input_num);
+        structure[layer_index]=new int[input_num];
+        layer_unit_num[layer_index]=input_num;
         for(int n=1; n<=input_num; ++n)
         {
-            layer.push_back(n);
-            addElement();
+            structure[layer_index][n-1]=n;
+//            addElement();
         }
-        structure.push_back(layer);
+
         int begin_index=input_num+1;
 
         for(int m=0; m!=hidden_num.size(); ++m)
         {
-            layer.clear();
+            ++layer_index;
+            layer_unit_num.push_back(hidden_num[m]);
+            structure[layer_index]=new int[(hidden_num[m])]; //这个地方有问题
+
             for(int n=begin_index; n!=begin_index+hidden_num[m]; ++n)
             {
-                //bias
-                layer.push_back(n);
-                addElement();
-
-
-
+                structure[layer_index][n-begin_index]=n;
             }
-            if (layer.size())
-                structure.push_back(layer);
             begin_index=begin_index+hidden_num[m];
         }
 
-
-        layer.clear();
+        ++layer_index;
+        structure[layer_index]=new int[output_num];
+        layer_unit_num.push_back(output_num);
         for(int n=begin_index; n!=begin_index+output_num; ++n)
         {
-            layer.push_back(n);
-            addElement();
+            structure[layer_index][n-begin_index]=n;
+//            addElement();
             Y.push_back(0.);
+            O.push_back(0.);
         }
-        structure.push_back(layer);
 
         unit_num=begin_index+output_num-1;
 
         w = new double*[unit_num+1];
         for(int i=0;i<=unit_num;i++)
+        {
             w[i]=new double[unit_num+1];
+            for(int j=0;j<=unit_num;j++)
+                w[i][j]=0.;
+        }
+
 
         deltaw_old = new double*[unit_num+1];
         for(int i=0;i<=unit_num;i++)
+        {
             deltaw_old[i]=new double[unit_num+1];
+            for(int j=0;j<=unit_num;j++)
+                deltaw_old[i][j]=0.;
+        }
+
 
         deltaw = new double*[unit_num+1];
         for(int i=0;i<=unit_num;i++)
+        {
             deltaw[i]=new double[unit_num+1];
+            for(int j=0;j<=unit_num;j++)
+                deltaw[i][j]=0.;
+        }
+
+
+
+        //这样就会留空了.. 寻求解决方案
+        vector<int> empty_int_vec;
+
+        vector< vector<int> > _FO(unit_num+1, empty_int_vec);
+        vector< vector<int> > _FI(unit_num+1, empty_int_vec);
+
+        vector<double> _out_buffer(unit_num+1, 0.0);
+        vector<double> _err_buffer(unit_num+1, 0.0);
+
+        err_buffer=_err_buffer;
+        out_buffer=_out_buffer;
+        FO=_FO;
+        FI=_FI;
 
         //bias为1
         out_buffer[0]=1.; //debug
-        //这样就会留空了.. 寻求解决方案
-
-//        for(vector< vector<double> >::iterator iter=deltaw_old.begin(); iter!=deltaw_old.end(); ++iter)
-//        {
-//            for(int n=0;n!=deltaw_old.size();++n)
-//                (*iter).push_back(0.);
-//        }
-//
-//        for(vector< vector<double> >::iterator iter=deltaw.begin(); iter!=deltaw.end(); ++iter)
-//        {
-//            for(int n=0;n!=deltaw.size();++n)
-//                (*iter).push_back(0.);
-//        }
-
-//        for(vector< vector<double> >::iterator iter=w.begin(); iter!=w.end(); ++iter)
-//        {
-//            for(int n=0;n!=w.size();++n)
-//                (*iter).push_back(0.);
-//        }
 
     }
 
-    inline void addElement()
-    {
-        vector<int> empty_int_vec;
-        vector<double> empty_double_vec;
-        out_buffer.push_back(0.);
-        err_buffer.push_back(0.);
-        FO.push_back(empty_int_vec);
-        FI.push_back(empty_int_vec);
-//        deltaw_old.push_back(empty_double_vec);
-//        deltaw.push_back(empty_double_vec);
-//        w.push_back(empty_double_vec);
-    }
+//    inline void addElement()
+//    {
+//        vector<int> empty_int_vec;
+//        vector<double> empty_double_vec;
+//        err_buffer.push_back(double(0)); //这个地方还留有一个棘手问题
+//        out_buffer.push_back(double(0));
+//        FO.push_back(empty_int_vec);
+//        FI.push_back(empty_int_vec);
+//    }
 
     inline void full_connect()
     {
-        vector<int> high_layer;
-        vector<int> low_layer;
-        for(vector< vector<int> >::iterator iter=structure.begin(); iter+1!=structure.end(); ++iter)
+        int high_layer_index;
+        int low_layer_index;
+
+        for(int layer_index=1; layer_index!=layer_num; ++layer_index)
         {
-            high_layer=*iter;
-            low_layer=*(iter+1);
-            for(vector<int>::iterator h_iter=high_layer.begin(); h_iter!=high_layer.end(); ++h_iter)
-                for(vector<int>::iterator l_iter=low_layer.begin(); l_iter!=low_layer.end(); ++l_iter)
+            high_layer_index=layer_index;
+            low_layer_index=layer_index+1;
+
+                for(int high_layer_unit_index=0;high_layer_unit_index!=layer_unit_num[layer_index];++high_layer_unit_index)
+                    for(int low_layer_unit_index=0;low_layer_unit_index!=layer_unit_num[layer_index+1];++low_layer_unit_index)
                 {
 
-                    connect(*h_iter, *l_iter);
+                    connect(structure[high_layer_index][high_layer_unit_index], structure[low_layer_index][low_layer_unit_index]);
                 }
         }
-        for(vector< vector<int> >::iterator iter=structure.begin()+1; iter!=structure.end(); ++iter)
+
+
+        for(int layer_index=2; layer_index<=layer_num; ++layer_index)
         {
-            high_layer=*iter;
-            for(vector<int>::iterator h_iter=high_layer.begin(); h_iter!=high_layer.end(); ++h_iter)
-                connect(0, *h_iter);
+            for(int unit_index=0;unit_index!=layer_unit_num[layer_index];++unit_index)
+                connect(0,  structure[layer_index][unit_index]); //连接bias
         }
 
 
@@ -179,6 +203,8 @@ public:
 
     inline void setweight(const int &i, const int &j, const double &weight=0)
     {
+//        if(i==2&&j==5)
+//            cout<<"ERROR!"<<endl;
         if (fabs(weight-0.)<1e-6)
             w[i][j]=rand()/(double)(RAND_MAX)-0.5;
         else
@@ -209,18 +235,18 @@ public:
 
     inline double backprop(const vector<double> &X, const vector<double> &T)
     {
-        vector<double> O=predict(X);
-
-        vector<int> layer=structure.back();
+        O=predict(X);
+        //之前用vector接收O 性能低下
         int i,j;
-        vector<int> out_set;
         int n=0;
         double error=0.;
         double residual;
-        for(vector<int>::iterator iter=layer.begin(); iter!=layer.end(); ++iter)
+
+        for(int unit_index=0; unit_index!=layer_unit_num[layer_num]; ++unit_index)
         {
-            j=*iter;
-            residual=T[n]-O[n];
+            j=structure[layer_num][unit_index];
+
+            residual=T[unit_index]-O[unit_index];
             err_buffer[j]=derivate(j)*residual;
             error+=residual*residual;
             ++n;
@@ -228,19 +254,17 @@ public:
             w[0][j]+=deltaw[0][j];
         }
 
-        for(vector< vector<int> >::reverse_iterator riter=structure.rbegin()+1; riter!=structure.rend(); ++riter)
+        for(int layer_index=layer_num-1; layer_index>0; --layer_index)
         {
-            layer=*riter;
-            for(vector<int>::iterator iter=layer.begin(); iter!=layer.end(); ++iter)
+            for(int unit_index=0; unit_index!=layer_unit_num[layer_index]; ++unit_index)
             {
-                i=*iter;
-                out_set=FO[i];
+                i=structure[layer_index][unit_index];
+                //之前用vector接收FO[i] 性能低下
                 err_buffer[i]=0.;
-                for(vector<int>::iterator s_iter=out_set.begin(); s_iter!=out_set.end(); ++s_iter)
+                for(vector<int>::iterator s_iter=FO[i].begin(); s_iter!=FO[i].end(); ++s_iter)
                 {
                     j=*s_iter;
 
-//                    err_buffer[i]+=err_buffer[j]*w[i][j];
                     deltaw[i][j]=eta*err_buffer[j]*out_buffer[i]+momentum*deltaw_old[i][j];
 
                     w[i][j]+=deltaw[i][j];
@@ -255,6 +279,8 @@ public:
 
             }
         }
+
+
         double **temp;
         temp=deltaw_old;
         deltaw_old=deltaw;
@@ -282,27 +308,28 @@ public:
 
     inline vector<double> predict(const vector<double> &X)
     {
-        vector<int> layer;
-        layer=structure.front();
-        for(vector<int>::iterator iter=layer.begin(); iter!=layer.end(); ++iter)
+        for(int unit_index=0;unit_index!=layer_unit_num[1];++unit_index)
         {
-            if (*iter>X.size())
-                out_buffer[*iter]=0.0;
+            if (unit_index+1>X.size())
+            {
+                out_buffer[structure[1][unit_index]]=0.0;
+            }
             else
-                out_buffer[*iter]=X[(*iter)-1];
+            {
+                out_buffer[structure[1][unit_index]]=X[unit_index];
+            }
         }
 
         int i,j;
-        vector<int> in_set;
-        for(vector< vector<int> >::iterator iter=structure.begin()+1; iter!=structure.end(); ++iter)
+
+
+        for(int layer_index=2; layer_index<=layer_num; ++layer_index)
         {
-            layer=*iter;
-            for(vector<int>::iterator l_iter=layer.begin(); l_iter!=layer.end(); ++l_iter)
+            for(int unit_index=0;unit_index!=layer_unit_num[layer_index]; ++unit_index)
             {
-                j=*l_iter;
-                in_set=FI[j];
+                j=structure[layer_index][unit_index];
                 out_buffer[j]=0;
-                for(vector<int>::iterator s_iter=in_set.begin(); s_iter!=in_set.end(); ++s_iter)
+                for(vector<int>::iterator s_iter=FI[j].begin(); s_iter!=FI[j].end(); ++s_iter)
                 {
                     i=*s_iter;
                     out_buffer[j]=out_buffer[j]+out_buffer[i]*w[i][j];
@@ -311,13 +338,10 @@ public:
             }
         }
 
-        layer=structure.back();
 
-        int n=0;
-        for(vector<int>::iterator l_iter=layer.begin(); l_iter!=layer.end(); ++l_iter)  //这个地方也是要耗时间的
+        for(int m=0;m!=layer_unit_num[layer_num];++m)
         {
-            Y[n]=out_buffer[*l_iter];
-            ++n;
+            Y[m]=out_buffer[structure[layer_num][m]];
         }
 
 
@@ -328,19 +352,21 @@ private:
     int input_num;
     vector<int> hidden_num;
     int output_num;
-    vector< vector<int> > structure;
+//    vector< vector<int> > structure;
+    int **structure;
 
     double eta;
     double momentum;
     int unit_num;
     int layer_num;
+    vector<int> layer_unit_num;
 //    vector< vector<double> > w;
-    double **w=NULL;
+    double **w;
 //    vector< vector<double> > deltaw;
-    double **deltaw=NULL;
+    double **deltaw;
 
 //    vector< vector<double> > deltaw_old;
-    double **deltaw_old=NULL;
+    double **deltaw_old;
 
     vector< vector<int> > FO;
     vector< vector<int> > FI;
@@ -348,6 +374,7 @@ private:
     vector<double> out_buffer;
     vector<double> err_buffer;
     vector<double> Y;
+    vector<double> O;
 
 
     inline double active_func(double y)

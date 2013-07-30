@@ -15,14 +15,23 @@ public:
 
 
 
-        vector< vector<int> > struc=net.structure;
-        vector<int> layer;
-        for(vector< vector<int> >::iterator iter=struc.begin(); iter!=struc.end(); ++iter)
+//        int** struc=net.structure;
+//        vector<int> layer;
+//        for(vector< vector<int> >::iterator iter=struc.begin(); iter!=struc.end(); ++iter)
+//        {
+//            layer=*iter;
+//            for(vector<int>::iterator l_iter=layer.begin(); l_iter!=layer.end(); ++l_iter)
+//            {
+//                cout<<*l_iter<<' ';
+//            }
+//            cout<<endl;
+//        }
+
+        for(int n=1;n<=net.layer_num;++n)
         {
-            layer=*iter;
-            for(vector<int>::iterator l_iter=layer.begin(); l_iter!=layer.end(); ++l_iter)
+            for(int m=0; m!=net.layer_unit_num[n];++m)
             {
-                cout<<*l_iter<<' ';
+                cout<<net.structure[n][m]<<' ';
             }
             cout<<endl;
         }
@@ -81,6 +90,21 @@ public:
         X3.push_back(1);
         X3.push_back(1);
 
+        cout<<"P"<<net.predict(X2)[0]<<endl;
+        showOutBuffer(net);
+
+    //predict测时
+//        tic;
+//        for (int i = 0 ; i < 171250 ; i++ )
+//        {
+//            net.predict(X0);
+//            net.predict(X1);
+//            net.predict(X2);
+//            net.predict(X3);
+//        }
+//        toc;
+//        tictoc(stdout);
+
 //        vector<double> Y=net.predict(X);
 //        for(vector<double>::iterator iter=Y.begin(); iter!=Y.end(); ++iter)
 //        {
@@ -137,7 +161,7 @@ public:
         }
         toc;
         tictoc(stdout);
-        showWeight(net);
+//        showWeight(net);
 
         cout<<"ERROR:"<<0.5*error<<endl;
         vector<double> X;
@@ -160,28 +184,24 @@ public:
         X.push_back(1);
         cout<<net.predict(X)[0]<<endl;
 
+
+
     }
 
 private:
 //    NeuralNet net;
     void showWeight(const NeuralNet &net)
     {
-//        vector< vector<double> > w=net.w;
-//        vector<double> v;
-//        int i=0;
-//        int j;
-//        for(vector< vector<double> >::iterator iter=w.begin(); iter!=w.end(); ++iter)
-//        {
-//            v=*iter;
-//            j=0;
-//            for(vector<double>::iterator l_iter=v.begin(); l_iter!=v.end(); ++l_iter)
-//            {
-//                if (fabs(*l_iter-0.)>1e-6)
-//                    cout<<i<<'-'<<j<<':'<<*l_iter<<endl;
-//                ++j;
-//            }
-//            ++i;
-//        }
+        double **w=net.w;
+        int unit_num=net.unit_num;
+        for(int i=0;i<=unit_num;++i)
+        {
+            for(int j=0;j<=unit_num;++j)
+            {
+                if (fabs(w[i][j]-0.)>1e-6)
+                    cout<<i<<'-'<<j<<':'<<w[i][j]<<endl;
+            }
+        }
     }
 
     void showOutBuffer(const NeuralNet &net)
