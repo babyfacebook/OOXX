@@ -4,15 +4,16 @@
 #include <cstdlib>
 #include <math.h>
 #include <time.h>
-
+#include "tanh_sse.h"
 
 #define LINEAR 0
 #define LOGISTIC 1
 #define TANH 2
+#define approx_tanh(x) (-.67436811832e-5+(.2468149110712040+(.583691066395175e-1+.3357335044280075e-1*x)*x)*x)/(.2464845986383725+(.609347197060491e-1+(.1086202599228572+.2874707922475963e-1*x)*x)*x)
 
 class NeuralNet{
 public:
-    NeuralNet(const int &l, const vector<int> &m, const int &n=1, const double &a=0.1, const double &b=0.5)
+    NeuralNet(const int &l, const std::vector<int> &m, const int &n=1, const double &a=0.1, const double &b=0.5)
     :input_num(l), hidden_num(m), output_num(n), eta(a), momentum(b)
     {
         init();
@@ -37,21 +38,21 @@ public:
 
         for(int i=0;i<=unit_num;i++)
         {
-            delete deltaw_old[i];
-            deltaw_old[i]=NULL;
+            delete d_w_old[i];
+            d_w_old[i]=NULL;
         }
 
-        delete deltaw_old;
-        deltaw_old=NULL;
+        delete d_w_old;
+        d_w_old=NULL;
 
         for(int i=0;i<=unit_num;i++)
         {
-            delete deltaw[i];
-            deltaw[i]=NULL;
+            delete d_w[i];
+            d_w[i]=NULL;
         }
 
-        delete deltaw;
-        deltaw=NULL;
+        delete d_w;
+        d_w=NULL;
 
         //记得销毁structure 从0开始
         for(int n=1;n<=layer_num;++n)
@@ -123,33 +124,33 @@ public:
         }
 
 
-        deltaw_old = new double*[unit_num+1];
+        d_w_old = new double*[unit_num+1];
         for(int i=0;i<=unit_num;i++)
         {
-            deltaw_old[i]=new double[unit_num+1];
+            d_w_old[i]=new double[unit_num+1];
             for(int j=0;j<=unit_num;j++)
-                deltaw_old[i][j]=0.;
+                d_w_old[i][j]=0.;
         }
 
 
-        deltaw = new double*[unit_num+1];
+        d_w = new double*[unit_num+1];
         for(int i=0;i<=unit_num;i++)
         {
-            deltaw[i]=new double[unit_num+1];
+            d_w[i]=new double[unit_num+1];
             for(int j=0;j<=unit_num;j++)
-                deltaw[i][j]=0.;
+                d_w[i][j]=0.;
         }
 
 
 
         //这样就会留空了.. 寻求解决方案
-        vector<int> empty_int_vec;
+        std::vector<int> empty_int_vec;
 
-        vector< vector<int> > _FO(unit_num+1, empty_int_vec);
-        vector< vector<int> > _FI(unit_num+1, empty_int_vec);
+        std::vector< std::vector<int> > _FO(unit_num+1, empty_int_vec);
+        std::vector< std::vector<int> > _FI(unit_num+1, empty_int_vec);
 
-        vector<double> _out_buffer(unit_num+1, 0.0);
-        vector<double> _err_buffer(unit_num+1, 0.0);
+        std::vector<double> _out_buffer(unit_num+1, 0.0);
+        std::vector<double> _err_buffer(unit_num+1, 0.0);
 
         err_buffer=_err_buffer;
         out_buffer=_out_buffer;
@@ -206,12 +207,12 @@ public:
 //        if(i==2&&j==5)
 //            cout<<"ERROR!"<<endl;
         if (fabs(weight-0.)<1e-6)
-            w[i][j]=rand()/(double)(RAND_MAX)-0.5;
+            w[i][j]=(rand()/(double)(RAND_MAX)-0.5)/10.;
         else
             w[i][j]=weight;
 
-        deltaw_old[i][j]=0.;
-        deltaw[i][j]=0.;
+//        d_w_old[i][j]=0.;
+        d_w[i][j]=0.;
     }
 
     inline void connect(const int &i, const int &j, const double &weight=0)
@@ -233,12 +234,11 @@ public:
 //
 //    }
 
-    inline double backprop(const vector<double> &X, const vector<double> &T)
+    inline double backprop(const std::vector<double> &X, const std::vector<double> &T)
     {
         O=predict(X);
         //之前用vector接收O 性能低下
         int i,j;
-        int n=0;
         double error=0.;
         double residual;
 
@@ -249,48 +249,49 @@ public:
             residual=T[unit_index]-O[unit_index];
             err_buffer[j]=derivate(j)*residual;
             error+=residual*residual;
-            ++n;
-            deltaw[0][j]=eta*err_buffer[j]*out_buffer[0]+momentum*deltaw_old[0][j];
-            w[0][j]+=deltaw[0][j];
+            d_w[0][j]=eta*err_buffer[j]*out_buffer[0]+momentum*d_w[0][j];
+            w[0][j]+=d_w[0][j];
         }
 
-        for(int layer_index=layer_num-1; layer_index>0; --layer_index)
+        for(int layer_index=layer_num-1; layer_index!=0; --layer_index)
         {
             for(int unit_index=0; unit_index!=layer_unit_num[layer_index]; ++unit_index)
             {
                 i=structure[layer_index][unit_index];
                 //之前用vector接收FO[i] 性能低下
                 err_buffer[i]=0.;
-                for(vector<int>::iterator s_iter=FO[i].begin(); s_iter!=FO[i].end(); ++s_iter)
+                for(std::vector<int>::iterator s_iter=FO[i].begin(); s_iter!=FO[i].end(); ++s_iter)
                 {
                     j=*s_iter;
 
-                    deltaw[i][j]=eta*err_buffer[j]*out_buffer[i]+momentum*deltaw_old[i][j];
+                    err_buffer[i]+=err_buffer[j]*w[i][j];
 
-                    w[i][j]+=deltaw[i][j];
+                    d_w[i][j]=eta*err_buffer[j]*out_buffer[i]+momentum*d_w[i][j];  //注意cache optimisation 二维矩阵换成一维 时间上相邻最好空间也相邻
 
-                    err_buffer[i]+=err_buffer[j]*w[i][j];  //这个位置反而加速收敛
+                    w[i][j]+=d_w[i][j];
+
+//                    err_buffer[i]+=err_buffer[j]*w[i][j];  //这个位置对于小的学习速率加速收敛 快那么一点儿 但是对于大学习率会出严重问题
 
 
                 }
                 err_buffer[i]*=derivate(i);
-                deltaw[0][i]=eta*err_buffer[i]*out_buffer[0]+momentum*deltaw_old[0][i];
-                w[0][i]+=deltaw[0][i];
+                d_w[0][i]=eta*err_buffer[i]*out_buffer[0]+momentum*d_w[0][i];
+                w[0][i]+=d_w[0][i];
 
             }
         }
 
 
-        double **temp;
-        temp=deltaw_old;
-        deltaw_old=deltaw;
-        deltaw=temp;
+
+//        dd_pointer=d_w_old;
+//        d_w_old=d_w;
+//        d_w=dd_pointer;
 
         return 0.5*error;
 
     }
 
-    inline double derivate(const int &j, const int &ac_fun=LOGISTIC)
+    inline double derivate(const int &j, const int &ac_fun=TANH)
     {
         switch(ac_fun)
         {
@@ -306,7 +307,7 @@ public:
         }
     }
 
-    inline vector<double> predict(const vector<double> &X)
+    inline std::vector<double> predict(const std::vector<double> &X)
     {
         for(int unit_index=0;unit_index!=layer_unit_num[1];++unit_index)
         {
@@ -317,11 +318,13 @@ public:
             else
             {
                 out_buffer[structure[1][unit_index]]=X[unit_index];
+
             }
         }
 
         int i,j;
 
+//        cout<<"Layer NUM:"<<layer_num;
 
         for(int layer_index=2; layer_index<=layer_num; ++layer_index)
         {
@@ -329,12 +332,15 @@ public:
             {
                 j=structure[layer_index][unit_index];
                 out_buffer[j]=0;
-                for(vector<int>::iterator s_iter=FI[j].begin(); s_iter!=FI[j].end(); ++s_iter)
+//                cout<<"FI_NUM("<<j<<"):"<<FI[j].size()<<endl;
+                for(std::vector<int>::iterator s_iter=FI[j].begin(); s_iter!=FI[j].end(); ++s_iter)
                 {
                     i=*s_iter;
                     out_buffer[j]=out_buffer[j]+out_buffer[i]*w[i][j];
+
                 }
-                out_buffer[j]=active_func(out_buffer[j]);
+                out_buffer[j]=activation(out_buffer[j]);
+//                cout<<"out "<<j<<" :"<<out_buffer[j]<<endl;
             }
         }
 
@@ -350,7 +356,7 @@ public:
 
 private:
     int input_num;
-    vector<int> hidden_num;
+    std::vector<int> hidden_num;
     int output_num;
 //    vector< vector<int> > structure;
     int **structure;
@@ -359,27 +365,29 @@ private:
     double momentum;
     int unit_num;
     int layer_num;
-    vector<int> layer_unit_num;
+    std::vector<int> layer_unit_num;
 //    vector< vector<double> > w;
     double **w;
-//    vector< vector<double> > deltaw;
-    double **deltaw;
+//    vector< vector<double> > d_w;
+    double **d_w;
 
-//    vector< vector<double> > deltaw_old;
-    double **deltaw_old;
+//    vector< vector<double> > d_w_old;
+    double **d_w_old;
 
-    vector< vector<int> > FO;
-    vector< vector<int> > FI;
+    std::vector< std::vector<int> > FO;
+    std::vector< std::vector<int> > FI;
 
-    vector<double> out_buffer;
-    vector<double> err_buffer;
-    vector<double> Y;
-    vector<double> O;
+    std::vector<double> out_buffer;
+    std::vector<double> err_buffer;
+    std::vector<double> Y;
+    std::vector<double> O;
 
+//    double **dd_pointer;
 
-    inline double active_func(double y)
+    inline double activation(double y)
     {
-        return logistic(y);
+        return tanh(y);
+//        return fast_tanh(y);
     }
 
     inline double linear(double y)
@@ -394,6 +402,14 @@ private:
 
     inline double tanh(double y)
     {
+        if (y<3.1&&y>-3.1)
+        {
+            if (y>=0.)
+                return approx_tanh(y);
+            else
+                return -approx_tanh(-y);
+        }
+
         return (2./(1.+exp(-2.*y))-1);
     }
 

@@ -6,7 +6,7 @@
 //#include <stdexcept>
 
 
-using namespace std;
+//using namespace std;
 
 
 const int MAX_BOARD_SIZE=15;
@@ -248,12 +248,12 @@ public:
 
 private:
 
-    bitset<256> black_pieces; //256+256位的棋盘 前1位不要 中间15*15表示黑棋 15*15表示白棋 从左到右从上至下索引 black+white各后两位放棋盘边长 最大15
-    bitset<256> white_pieces; //任意时候 black_pieces&white_pieces==0(不存边长的话) 位0表示对应的位置没有棋子 1表示有相应棋子
+    std::bitset<256> black_pieces; //256+256位的棋盘 前1位不要 中间15*15表示黑棋 15*15表示白棋 从左到右从上至下索引 black+white各后两位放棋盘边长 最大15
+    std::bitset<256> white_pieces; //任意时候 black_pieces&white_pieces==0(不存边长的话) 位0表示对应的位置没有棋子 1表示有相应棋子
 
     inline void setSize(const int &l)
     {
-        bitset<4> length(l);
+        std::bitset<4> length(l);
         black_pieces[255]=length[3];
         black_pieces[254]=length[2];
         white_pieces[255]=length[1];
@@ -280,10 +280,10 @@ private:
         return i>0&&i<=size()&&j>0&&j<=size();
     }
 
-    friend ostream& operator<< (ostream& os, const Board &board);
+    friend std::ostream& operator<< (std::ostream& os, const Board &board);
 };
 
-inline ostream& operator<< (ostream& os, const Board &board)
+inline std::ostream& operator<< (std::ostream& os, const Board &board)
 {
     for(int i=board.size();i!=0;i--)
     {
@@ -292,7 +292,7 @@ inline ostream& operator<< (ostream& os, const Board &board)
             os<<board.mark(i, j)<<' ';
 
         }
-        os<<endl;
+        os<<std::endl;
     }
 
     return os;

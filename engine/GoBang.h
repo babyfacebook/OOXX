@@ -29,9 +29,9 @@ using namespace std;
 #define OPEN_ONE 2
 #define SLEEP_ONE 1
 
-typedef pair<int, int> Action;
+typedef std::pair<int, int> Action;
 
-const vector<Action> ac_vec;
+const std::vector<Action> ac_vec;
 const char direct_arr[4]={'-', '|', '/', '\\'};
 
 class GoBang{
@@ -78,22 +78,22 @@ public:
 
     void reset();
 
-    pair<pair< int, vector<Action> >, pair<int, int> > preScan(const int &i, const int &j, const char &direct, const Board &goBoard, const bool &forbid_move=true);
+    std::pair<std::pair< int, std::vector<Action> >, std::pair<int, int> > preScan(const int &i, const int &j, const char &direct, const Board &goBoard, const bool &forbid_move=true);
 
-    inline pair<pair< int, vector<Action> >, pair<int, int> > preScan(const int &i, const int &j, const char &direct)
+    inline std::pair<std::pair< int, std::vector<Action> >, std::pair<int, int> > preScan(const int &i, const int &j, const char &direct)
     {
         return preScan(i, j, direct, board, forbid_move);
     }
 
     //对某方向(横竖撇捺) 返回连接点集合和连珠长度
-    static pair< int, vector<Action> > scanLine(const int &i, const int &j, const char &direct, const Board &goBoard);
+    static std::pair< int, std::vector<Action> > scanLine(const int &i, const int &j, const char &direct, const Board &goBoard);
 
-    inline pair< int, vector<Action> > scanLine(const int &i, const int &j, const char &direct) const
+    inline std::pair< int, std::vector<Action> > scanLine(const int &i, const int &j, const char &direct) const
     {
         return scanLine(i, j, direct, board);
     };
 
-    static pair<int, pair<int, int> > countLine(const int &i, const int &j, const char &direct, const Board &goBoard);
+    static std::pair<int, std::pair<int, int> > countLine(const int &i, const int &j, const char &direct, const Board &goBoard);
 
 
 
@@ -106,10 +106,10 @@ public:
 
     static int isForbidMove_Old(const int &i, const int &j, Board &goBoard);
 
-    pair< int, vector<Action> > checkLineState(const int &i, const int &j, const char &direct, Board &goBoard, const bool &forbid_move=true);
+    std::pair< int, std::vector<Action> > checkLineState(const int &i, const int &j, const char &direct, Board &goBoard, const bool &forbid_move=true);
 
 
-    static pair< int, vector<Action> > checkLineStateWithKeyPoints(const int &i, const int &j, const char &direct, Board &goBoard, const bool &forbid_move=true, int depth=-1);
+    static std::pair< int, std::vector<Action> > checkLineStateWithKeyPoints(const int &i, const int &j, const char &direct, Board &goBoard, const bool &forbid_move=true, int depth=-1);
 
     //checkLineState 在某方向用scanLine进行状态判断:眠一/活一/眠二/活二/眠三/活三/眠四/活四/五/长连 这个地方的难点在于还要将所有的关键点检测出来
     //长连 黑棋line_count>5
@@ -122,23 +122,23 @@ public:
     //眠二 有点可成眠三(有点可成活三则为活二) (line_count<=2)  X...X
     //活一 有点可成活二 (line_count==1)
     //眠一 有点可成眠二 (line_count==1)
-    inline pair< int, vector<Action> > checkLineStateWithKeyPoints(const int &i, const int &j, const char &direct)
+    inline std::pair< int, std::vector<Action> > checkLineStateWithKeyPoints(const int &i, const int &j, const char &direct)
     {
         return checkLineStateWithKeyPoints(i, j, direct, board, forbid_move);
     };
     //在所有方向上用checkState检查状态 除了输赢状态 要返回所有关键落子点
-    static pair< int, vector<Action> > checkState(const int &i, const int &j, Board &goBoard, const bool &forbid_move=true);
+    static std::pair< int, std::vector<Action> > checkState(const int &i, const int &j, Board &goBoard, const bool &forbid_move=true);
 
-    inline pair< int, vector<Action> > checkState(const int &i, const int &j)
+    inline std::pair< int, std::vector<Action> > checkState(const int &i, const int &j)
     {
         return checkState(i, j, board, forbid_move);
     }
 
-//    inline pair< int, vector<Action> > checkState()
+//    inline std::pair< int, std::vector<Action> > checkState()
 //    {
 //        if (move_stack.empty())
-//            return make_pair(0, ac_vec);
-//        pair< int, vector<Action> > state;
+//            return make_std::pair(0, ac_vec);
+//        std::pair< int, std::vector<Action> > state;
 //        state=checkState(move_stack.top().second.first, move_stack.top().second.second); //暂时隐去
 //        if (state.first==FIVE)
 //            winner=board.at(move_stack.top().second.first, move_stack.top().second.second);
@@ -150,12 +150,12 @@ public:
 //
 //        return state;
 //    }
-    inline pair< int, vector<Action> > checkState()
+    inline std::pair< int, std::vector<Action> > checkState()
     {
         if (move_stack.empty())
             return make_pair(0, ac_vec);
 
-//        pair< int, vector<Action> > state;
+//        std::pair< int, std::vector<Action> > state;
 //        state=preScan(move_stack.top().second.first, move_stack.top().second.second, '-').first; //暂时隐去
 //        if (state.first==FIVE)
 //            winner=board.at(move_stack.top().second.first, move_stack.top().second.second);
@@ -194,10 +194,10 @@ public:
 
 
 private:
-    stack< pair<int, Action> > move_stack;
-    stack< pair<int, Action> > undo_stack;
+    stack< std::pair<int, Action> > move_stack;
+    stack< std::pair<int, Action> > undo_stack;
     bool forbid_move; //禁手开关  还是删掉算了。。 麻烦
-    map< vector<signed char>, pair<signed char, vector<signed char> > > model_map; //搞成static会有个奇怪的东西
+    map< std::vector<signed char>, std::pair<signed char, std::vector<signed char> > > model_map; //搞成static会有个奇怪的东西
 
     inline void changePlayer()
     {
@@ -207,8 +207,8 @@ private:
     inline void readModelMap()
     {
            const char * file="model_map.dat";
-            vector<signed char> keyPosSet;
-            vector<signed char> model;
+            std::vector<signed char> keyPosSet;
+            std::vector<signed char> model;
             int piece;
             int pos;
             signed char state=0;
@@ -243,7 +243,7 @@ private:
 
                     //减一还原操作
 
-                    for(vector<signed char>::iterator iter=model.begin(); iter!=model.end(); ++iter)
+                    for(std::vector<signed char>::iterator iter=model.begin(); iter!=model.end(); ++iter)
                     {
                         *iter=*iter-1;
 
@@ -291,8 +291,8 @@ private:
 //            showMap(model_map);
 
 
-            map< vector<signed char>, pair<signed char, vector<signed char> > > temp_model_map=model_map;
-            for(map< vector<signed char>, pair<signed char, vector<signed char> > >::iterator iter=model_map.begin(); iter!=model_map.end(); ++iter)
+            map< std::vector<signed char>, std::pair<signed char, std::vector<signed char> > > temp_model_map=model_map;
+            for(map< std::vector<signed char>, std::pair<signed char, std::vector<signed char> > >::iterator iter=model_map.begin(); iter!=model_map.end(); ++iter)
             {
                 for(int n=0;n<11;++n)
                 {
@@ -301,7 +301,7 @@ private:
                 if (model_map.count(model)==0)
                 {
                     keyPosSet=(iter->second).second;
-                    for(vector<signed char>::iterator pos_iter=keyPosSet.begin(); pos_iter!=keyPosSet.end(); ++pos_iter)
+                    for(std::vector<signed char>::iterator pos_iter=keyPosSet.begin(); pos_iter!=keyPosSet.end(); ++pos_iter)
                     {
                         *pos_iter=-*pos_iter;
                     }
@@ -315,17 +315,17 @@ private:
 
     }
 
-    inline void showMap(map<vector<int>, pair<int, vector<int> > > &m)
+    inline void showMap(map<std::vector<int>, std::pair<int, std::vector<int> > > &m)
     {
-        vector<int> keyPosSet;
-        vector<int> model;
+        std::vector<int> keyPosSet;
+        std::vector<int> model;
         int piece;
         int pos;
         int state=0;
-        for(map<vector<int>, pair<int, vector<int> > >::iterator iter=m.begin(); iter!=m.end(); ++iter)
+        for(map<std::vector<int>, std::pair<int, std::vector<int> > >::iterator iter=m.begin(); iter!=m.end(); ++iter)
         {
             model=iter->first;
-            for(vector<int>::iterator model_iter=model.begin(); model_iter!=model.end(); ++model_iter)
+            for(std::vector<int>::iterator model_iter=model.begin(); model_iter!=model.end(); ++model_iter)
             {
                 piece=*model_iter;
                 switch(piece)
@@ -425,7 +425,7 @@ private:
 
 
             keyPosSet=(iter->second).second;
-            for(vector<int>::iterator pos_iter=keyPosSet.begin(); pos_iter!=keyPosSet.end(); ++pos_iter)
+            for(std::vector<int>::iterator pos_iter=keyPosSet.begin(); pos_iter!=keyPosSet.end(); ++pos_iter)
             {
                 cout<<"pos: "<<*pos_iter<<endl;
             }

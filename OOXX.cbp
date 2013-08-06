@@ -12,6 +12,8 @@
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Compiler>
+					<Add option="-Wextra" />
+					<Add option="-Wall" />
 					<Add option="-g" />
 				</Compiler>
 			</Target>
@@ -21,6 +23,7 @@
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Compiler>
+					<Add option="-march=core2" />
 					<Add option="-O2" />
 					<Add directory="include/" />
 				</Compiler>
@@ -35,13 +38,24 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 			<Add directory="include/" />
+			<Add directory="C:/Program Files (x86)/CodeBlocks/MinGW/include" />
 		</Compiler>
 		<Linker>
 			<Add library="lib\panel.a" />
 			<Add library="lib\pdcurses.a" />
+			<Add library="glut32" />
+			<Add library="opengl32" />
+			<Add library="glu32" />
+			<Add library="winmm" />
+			<Add library="gdi32" />
 		</Linker>
 		<Unit filename="ai/ann/FastNN.h" />
 		<Unit filename="ai/ann/NeuralNet.h" />
+		<Unit filename="ai/snake/SnakeGame.cc">
+			<Option compile="0" />
+			<Option link="0" />
+		</Unit>
+		<Unit filename="ai/snake/SnakeMap.h" />
 		<Unit filename="engine/Board.h" />
 		<Unit filename="engine/GoBang.cc" />
 		<Unit filename="engine/GoBang.h" />
@@ -52,7 +66,6 @@
 		<Unit filename="test/NeuralNetTester.h" />
 		<Unit filename="utils/Action.h" />
 		<Unit filename="utils/Manual.h" />
-		<Unit filename="utils/timer.h" />
 		<Unit filename="utils/tree/tree.hh" />
 		<Extensions>
 			<code_completion />

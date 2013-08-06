@@ -1,116 +1,9 @@
 # depslib dependency file v1.0
-1374922132 source:d:\pancho\dropbox\workspace\ooxx\engine\gobang.cc
-	"GoBang.h"
-
-1375591664 d:\pancho\dropbox\workspace\ooxx\engine\gobang.h
-	"Board.h"
-	<iostream>
-	<fstream>
-	<vector>
-	<stack>
-	<map>
-	<set>
-	<iomanip>
-
-1375591570 d:\pancho\dropbox\workspace\ooxx\engine\board.h
-	<iostream>
-	<bitset>
-
-1375345748 source:d:\pancho\dropbox\workspace\ooxx\main.cc
-	<iostream>
-	"test\GoBangTester.h"
-	"test\NeuralNetTester.h"
-	"interface\FiverEngine.h"
-
-1374661286 d:\pancho\dropbox\workspace\ooxx\test\gobangtester.h
-	"..\\engine\GoBang.h"
-	<sstream>
-	<map>
-	<fstream>
-
-1375591664 d:\pancho\dropbox\workspace\ooxx\\engine\gobang.h
-	"Board.h"
-	<iostream>
-	<fstream>
-	<vector>
-	<stack>
-	<map>
-	<set>
-	<iomanip>
-
-1375591570 d:\pancho\dropbox\workspace\ooxx\\engine\board.h
-	<iostream>
-	<bitset>
-
-1374919970 d:\pancho\dropbox\workspace\ooxx\interface\fiverengine.h
-	"..\\engine\GoBang.h"
-	<iostream>
-	<sstream>
-	<curses.h>
-
-1374419215 d:\pancho\dropbox\workspace\ooxx\include\\curses.h
-	<stdarg.h>
-	<stddef.h>
-	<stdio.h>
-	<wchar.h>
-
-1375803519 d:\pancho\dropbox\workspace\ooxx\test\neuralnettester.h
-	"..\\ai\ANN\NeuralNet.h"
-	"..\\utils\timer.h"
-
-1375803507 d:\pancho\dropbox\workspace\ooxx\\ai\ann\neuralnet.h
-	<cstdlib>
-	<math.h>
-	<time.h>
-	"tanh_sse.h"
-
-1375094763 d:\pancho\dropbox\workspace\ooxx\\utils\timer.h
-	<sys/time.h>
-	<time.h>
-	<stdio.h>
-
-1341010374 c:\program files (x86)\codeblocks\mingw\include\math.h
-	<_mingw.h>
-
-1341010370 c:\program files (x86)\codeblocks\mingw\include\_mingw.h
-
-1341010376 c:\program files (x86)\codeblocks\mingw\include\time.h
-	<_mingw.h>
-	<stddef.h>
-
-1341010380 c:\program files (x86)\codeblocks\mingw\include\sys\time.h
-	<time.h>
-
-1341010376 c:\program files (x86)\codeblocks\mingw\include\stdio.h
-	<_mingw.h>
-	<stddef.h>
-	<stdarg.h>
-	<sys/types.h>
-
-1341010380 c:\program files (x86)\codeblocks\mingw\include\sys\types.h
-	<_mingw.h>
-	<stddef.h>
-
-1341010378 c:\program files (x86)\codeblocks\mingw\include\wchar.h
-	<_mingw.h>
-	<stddef.h>
-	<stdarg.h>
-	<wctype.h>
-	<sys/types.h>
-	<stdio.h>
-	<stdint.h>
-	<stdint.h>
-
-1341010378 c:\program files (x86)\codeblocks\mingw\include\wctype.h
-	<_mingw.h>
-	<stddef.h>
-
-1341010376 c:\program files (x86)\codeblocks\mingw\include\stdint.h
-	<stddef.h>
-
-1375338972 d:\pancho\dropbox\workspace\ooxx\ai\snake\snakegame.h
+1375544129 source:d:\pancho\dropbox\workspace\ooxx\ai\snake\snakegame.cc
 	"SnakeMap.h"
 	"..\\ann\NeuralNet.h"
+	<iostream>
+	<set>
 	<OpenGL/gl.h>
 	<OpenGL/glu.h>
 	<GLUT/glut.h>
@@ -119,14 +12,25 @@
 	<GL/glu.h>
 	<GL/glut.h>
 
-1375337765 d:\pancho\dropbox\workspace\ooxx\ai\snake\snakemap.h
+1375450172 d:\pancho\dropbox\workspace\ooxx\ai\snake\snakemap.h
 	<cstdlib>
 	<time.h>
+	<vector>
+	<iostream>
 
-1375181197 d:\pancho\dropbox\workspace\ooxx\ai\\ann\neuralnet.h
+1341010376 c:\program files (x86)\codeblocks\mingw\include\time.h
+	<_mingw.h>
+	<stddef.h>
+
+1341010370 c:\program files (x86)\codeblocks\mingw\include\_mingw.h
+
+1375590293 d:\pancho\dropbox\workspace\ooxx\ai\\ann\neuralnet.h
 	<cstdlib>
 	<math.h>
 	<time.h>
+
+1341010374 c:\program files (x86)\codeblocks\mingw\include\math.h
+	<_mingw.h>
 
 1301111162 c:\program files (x86)\codeblocks\mingw\include\windows.h
 	<winresrc.h>
@@ -340,7 +244,4 @@
 	<windows.h>
 	<GL/gl.h>
 	<GL/glu.h>
-
-1375717345 d:\pancho\dropbox\workspace\ooxx\\ai\ann\tanh_sse.h
-	"xmmintrin.h"
 

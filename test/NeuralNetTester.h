@@ -11,7 +11,7 @@ public:
 
     void test()
     {
-        NeuralNet net(2,2,1,0.1,0);
+        NeuralNet net(2,2,1,0.1,0.);
 
 
 
@@ -90,7 +90,8 @@ public:
         X3.push_back(1);
         X3.push_back(1);
 
-        cout<<"P"<<net.predict(X2)[0]<<endl;
+//        cout<<"P"<<net.predict(X2)[0]<<endl;
+        net.predict(X2);
         showOutBuffer(net);
 
     //predict测时
@@ -142,7 +143,8 @@ public:
         double error;
 
         tic;
-        for(int n=0; n!=50000; ++n)
+        int n;
+        for(n=0; n!=1000000; ++n)
         {
             error=0;
 
@@ -151,16 +153,17 @@ public:
             error+=net.backprop(X1, Y1);
             error+=net.backprop(X3, Y3);
 
-            error=error/4;
-            if (error<0.001)
+
+            if (error<0.000004)
             {
-                cout<<n+1<<" Iterations."<<endl;
                 break;
             }
 
         }
         toc;
         tictoc(stdout);
+        cout<<n+1<<" Iterations."<<endl;
+        error=error/4;
 //        showWeight(net);
 
         cout<<"ERROR:"<<0.5*error<<endl;
